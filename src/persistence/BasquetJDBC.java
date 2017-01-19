@@ -35,7 +35,6 @@ public class BasquetJDBC {
         st.close();
         return equipos;
     }
-
     public void insertEquipo(Equipo e) throws SQLException {
         String insert = "insert into team values (?, ?, ?);";
         PreparedStatement ps = conexion.prepareStatement(insert);
@@ -45,7 +44,6 @@ public class BasquetJDBC {
         ps.executeUpdate();
         ps.close();
     }
-
     public List<Jugador> selectAllJugador() throws SQLException {
         List<Jugador> jugadores = new ArrayList<>();
         String query = "select * from player";
@@ -68,7 +66,6 @@ public class BasquetJDBC {
         st.close();
         return jugadores;
     }
-
     public void insertJugador(Jugador j) throws SQLException {
         String insert = "insert into player values (?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement ps = conexion.prepareStatement(insert);
@@ -82,14 +79,25 @@ public class BasquetJDBC {
         ps.executeUpdate();
         ps.close();
     }
-
+    public void modificarJugador(Jugador j) throws SQLException {
+        String insert = "update into player values (?, ?, ?, ?, ?, ?, ?);";
+        PreparedStatement ps = conexion.prepareStatement(insert);
+        ps.setString(1,j.getName());
+        ps.setDate(2, java.sql.Date.valueOf(j.getBirth()));
+        ps.setInt(3, j.getNbaskets());
+        ps.setInt(4, j.getNassists());
+        ps.setInt(5, j.getNrebounds());
+        ps.setString(6, j.getPosition());
+        ps.setString(7, j.getTeam().getName());
+        ps.executeUpdate();
+        ps.close();
+    }    
     public void conectar() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/basket";
         String usr = "root";
         String pass = "";
         conexion = DriverManager.getConnection(url, usr, pass);
     }
-
     public void desconectar() throws SQLException {
         if (conexion != null) {
             conexion.close();
