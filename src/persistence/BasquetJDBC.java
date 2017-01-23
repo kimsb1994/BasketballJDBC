@@ -28,7 +28,6 @@ public class BasquetJDBC {
             c.setName(rs.getString("name"));
             c.setCity(rs.getString("city"));
             c.setCreation(rs.getDate("creation").toLocalDate());
-
             equipos.add(c);
         }
         rs.close();
@@ -47,14 +46,12 @@ public class BasquetJDBC {
         ps.close();
     }
 
-    public void modificarEquipo(Equipo e) throws SQLException {
-        String insert = "update team set name = ?, city = ?, creation = ? " + " where name = ?;";
+    public void modificarEquipo(String jugador, String equipo) throws SQLException {
+        String insert = "update player set team = ?" + " where name = ?;";
         System.out.println(conexion);
         PreparedStatement ps = conexion.prepareStatement(insert);
-        ps.setString(1, e.getName());
-        ps.setString(2, e.getCity());
-        ps.setDate(3, java.sql.Date.valueOf(e.getCreation()));
-        ps.setString(4, e.getName());
+        ps.setString(1, equipo);
+        ps.setString(2, jugador);
         ps.executeUpdate();
         ps.close();
     }
@@ -120,51 +117,213 @@ public class BasquetJDBC {
     }
 
     public Jugador selectJugadorName(String Nombre) throws SQLException {
-        ArrayList <Jugador> Jugador = new ArrayList<>();
         String query = "select * from player where name = '" + Nombre + "';";
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(query);
         Jugador jugadorBuscado = new Jugador();
-        Equipo e = new Equipo();        
+        Equipo e = new Equipo();
         while (rs.next()) {
-        jugadorBuscado.setName(rs.getString("name"));
-        jugadorBuscado.setBirth(rs.getDate("birth").toLocalDate());
-        jugadorBuscado.setNbaskets(rs.getInt("nbaskets"));
-        jugadorBuscado.setNassists(rs.getInt("nassists"));
-        jugadorBuscado.setNrebounds(rs.getInt("nrebounds"));
-        jugadorBuscado.setPosition(rs.getString("Position"));
-        e.setName(rs.getString("team"));
-        jugadorBuscado.setTeam(e);
+            jugadorBuscado.setName(rs.getString("name"));
+            jugadorBuscado.setBirth(rs.getDate("birth").toLocalDate());
+            jugadorBuscado.setNbaskets(rs.getInt("nbaskets"));
+            jugadorBuscado.setNassists(rs.getInt("nassists"));
+            jugadorBuscado.setNrebounds(rs.getInt("nrebounds"));
+            jugadorBuscado.setPosition(rs.getString("Position"));
+            e.setName(rs.getString("team"));
+            jugadorBuscado.setTeam(e);
         }
         rs.close();
         st.close();
         return jugadorBuscado;
     }
-    
+
     public Jugador selectJugadorNameIncompleto(String Nombre) throws SQLException {
-        ArrayList <Jugador> Jugador = new ArrayList<>();
+        ArrayList<Jugador> Jugador = new ArrayList<>();
         String query = "select * from player where name like '%" + Nombre + "%';";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        Jugador jugadorBuscado = new Jugador();
+        Equipo e = new Equipo();
+        while (rs.next()) {
+            jugadorBuscado.setName(rs.getString("name"));
+            jugadorBuscado.setBirth(rs.getDate("birth").toLocalDate());
+            jugadorBuscado.setNbaskets(rs.getInt("nbaskets"));
+            jugadorBuscado.setNassists(rs.getInt("nassists"));
+            jugadorBuscado.setNrebounds(rs.getInt("nrebounds"));
+            jugadorBuscado.setPosition(rs.getString("Position"));
+            e.setName(rs.getString("team"));
+            jugadorBuscado.setTeam(e);
+        }
+        rs.close();
+        st.close();
+        return jugadorBuscado;
+    }
+
+    public List selectJugadorMayorIgualCanastas(int Canastas) throws SQLException {
+        List<Jugador> Jugador = new ArrayList<>();
+        String query = "select * from player where nbaskets >= " + Canastas + ";";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while (rs.next()) {
+            Jugador jugadorBuscado = new Jugador();
+            Equipo e = new Equipo();
+            jugadorBuscado.setName(rs.getString("name"));
+            jugadorBuscado.setBirth(rs.getDate("birth").toLocalDate());
+            jugadorBuscado.setNbaskets(rs.getInt("nbaskets"));
+            jugadorBuscado.setNassists(rs.getInt("nassists"));
+            jugadorBuscado.setNrebounds(rs.getInt("nrebounds"));
+            jugadorBuscado.setPosition(rs.getString("Position"));
+            e.setName(rs.getString("team"));
+            jugadorBuscado.setTeam(e);
+            Jugador.add(jugadorBuscado);
+        }
+        rs.close();
+        st.close();
+        return Jugador;
+    }
+
+    public List selectJugadorEntreAssistencias(int mayor, int menor) throws SQLException {
+        List<Jugador> Jugador = new ArrayList<>();
+        String query = "select * from player where nassists >= " + menor + " and nassists <= " + mayor;
+        System.out.println(query);
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while (rs.next()) {
+            Jugador jugadorBuscado = new Jugador();
+            Equipo e = new Equipo();
+            jugadorBuscado.setName(rs.getString("name"));
+            jugadorBuscado.setBirth(rs.getDate("birth").toLocalDate());
+            jugadorBuscado.setNbaskets(rs.getInt("nbaskets"));
+            jugadorBuscado.setNassists(rs.getInt("nassists"));
+            jugadorBuscado.setNrebounds(rs.getInt("nrebounds"));
+            jugadorBuscado.setPosition(rs.getString("Position"));
+            e.setName(rs.getString("team"));
+            jugadorBuscado.setTeam(e);
+            Jugador.add(jugadorBuscado);
+        }
+        rs.close();
+        st.close();
+        return Jugador;
+    }
+
+    public List selectJugadorPosicion(String Posicion) throws SQLException {
+        List<Jugador> Jugador = new ArrayList<>();
+        String query = "select * from player where Position like '%" + Posicion + "%';";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        Jugador jugadorBuscado = new Jugador();
+        Equipo e = new Equipo();
+        while (rs.next()) {
+            jugadorBuscado = new Jugador();
+            jugadorBuscado.setName(rs.getString("name"));
+            jugadorBuscado.setBirth(rs.getDate("birth").toLocalDate());
+            jugadorBuscado.setNbaskets(rs.getInt("nbaskets"));
+            jugadorBuscado.setNassists(rs.getInt("nassists"));
+            jugadorBuscado.setNrebounds(rs.getInt("nrebounds"));
+            jugadorBuscado.setPosition(rs.getString("Position"));
+            e.setName(rs.getString("team"));
+            jugadorBuscado.setTeam(e);
+            Jugador.add(jugadorBuscado);
+
+        }
+        rs.close();
+        st.close();
+        return Jugador;
+    }
+
+    public List selectJugadorPostFecha(int dia, int mes, int ano) throws SQLException {
+        List<Jugador> Jugador = new ArrayList<>();
+        String query = "select * from player where birth > '" + ano + "-" + dia + "-" + mes + "'" + ";";
         System.out.println(query);
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(query);
         Jugador jugadorBuscado = new Jugador();
-        Equipo e = new Equipo();        
+        Equipo e = new Equipo();
         while (rs.next()) {
-        jugadorBuscado.setName(rs.getString("name"));
-        jugadorBuscado.setBirth(rs.getDate("birth").toLocalDate());
-        jugadorBuscado.setNbaskets(rs.getInt("nbaskets"));
-        jugadorBuscado.setNassists(rs.getInt("nassists"));
-        jugadorBuscado.setNrebounds(rs.getInt("nrebounds"));
-        jugadorBuscado.setPosition(rs.getString("Position"));
-        e.setName(rs.getString("team"));
-        jugadorBuscado.setTeam(e);
+            jugadorBuscado = new Jugador();
+            jugadorBuscado.setName(rs.getString("name"));
+            jugadorBuscado.setBirth(rs.getDate("birth").toLocalDate());
+            jugadorBuscado.setNbaskets(rs.getInt("nbaskets"));
+            jugadorBuscado.setNassists(rs.getInt("nassists"));
+            jugadorBuscado.setNrebounds(rs.getInt("nrebounds"));
+            jugadorBuscado.setPosition(rs.getString("Position"));
+            e.setName(rs.getString("team"));
+            jugadorBuscado.setTeam(e);
+            Jugador.add(jugadorBuscado);
+
         }
         rs.close();
         st.close();
-        return jugadorBuscado;
+        return Jugador;
+    }
+
+    public List selectPosicionAvgMaxMin() throws SQLException {
+        List Jugador = new ArrayList<>();
+        String query = "select position, avg(nbaskets), max(nbaskets), min(nbaskets), avg(nassists), max(nassists), min(nassists), avg(nrebounds), max(nrebounds), min(nrebounds) from player group by position;";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        ArrayList Linea = new ArrayList<>();
+        
+        while (rs.next()) {
+            Linea = new ArrayList<>();
+            Linea.add(rs.getString("Position"));
+            Linea.add(rs.getInt("avg(nbaskets)"));
+            Linea.add(rs.getInt("max(nbaskets)"));
+            Linea.add(rs.getInt("min(nbaskets)"));
+            Linea.add(rs.getInt("avg(nassists)"));
+            Linea.add(rs.getInt("max(nassists)"));
+            Linea.add(rs.getInt("min(nassists)"));
+            Linea.add(rs.getInt("avg(nrebounds)"));
+            Linea.add(rs.getInt("max(nrebounds)"));
+            Linea.add(rs.getInt("min(nrebounds)"));
+            Jugador.add(Linea);
+        }
+        rs.close();
+        st.close();
+        return Jugador;
+    }
+    public List RankingsJugador() throws SQLException {
+        List Jugador = new ArrayList<>();
+        String query = "select name,  nbaskets from player order by nbaskets DESC;";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        ArrayList Linea = new ArrayList<>();
+        int i =0;
+        while (rs.next()) {
+            Linea = new ArrayList<>();
+            Linea.add(i);
+            Linea.add(rs.getString("name"));
+            Linea.add(rs.getInt("nbaskets"));
+            Jugador.add(Linea);
+            i++;
+        }
+        rs.close();
+        st.close();
+        return Jugador;
     }
     
-
+    public List RankingsJugadorBusqueda(String Nombre) throws SQLException {
+        List Jugador = new ArrayList<>();
+        String query = "select name,  nbaskets from player order by nbaskets DESC;";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        ArrayList Linea = new ArrayList<>();
+        int i =0;
+        while (rs.next()) {
+            if(rs.getString("name").equalsIgnoreCase(Nombre)){
+            Linea = new ArrayList<>();
+            Linea.add(i);
+            Linea.add(rs.getString("name"));
+            Linea.add(rs.getInt("nbaskets"));
+            Jugador.add(Linea);
+            }
+            i++;
+        }
+        rs.close();
+        st.close();
+        return Jugador;
+    }
+        
     public void conectar() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/basket";
         String usr = "root";
