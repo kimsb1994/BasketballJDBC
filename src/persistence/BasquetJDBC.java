@@ -263,7 +263,7 @@ public class BasquetJDBC {
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(query);
         ArrayList Linea = new ArrayList<>();
-        
+
         while (rs.next()) {
             Linea = new ArrayList<>();
             Linea.add(rs.getString("Position"));
@@ -282,13 +282,14 @@ public class BasquetJDBC {
         st.close();
         return Jugador;
     }
+
     public List RankingsJugador() throws SQLException {
         List Jugador = new ArrayList<>();
         String query = "select name,  nbaskets from player order by nbaskets DESC;";
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(query);
         ArrayList Linea = new ArrayList<>();
-        int i =0;
+        int i = 0;
         while (rs.next()) {
             Linea = new ArrayList<>();
             Linea.add(i);
@@ -301,21 +302,21 @@ public class BasquetJDBC {
         st.close();
         return Jugador;
     }
-    
+
     public List RankingsJugadorBusqueda(String Nombre) throws SQLException {
         List Jugador = new ArrayList<>();
         String query = "select name,  nbaskets from player order by nbaskets DESC;";
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(query);
         ArrayList Linea = new ArrayList<>();
-        int i =0;
+        int i = 0;
         while (rs.next()) {
-            if(rs.getString("name").equalsIgnoreCase(Nombre)){
-            Linea = new ArrayList<>();
-            Linea.add(i);
-            Linea.add(rs.getString("name"));
-            Linea.add(rs.getInt("nbaskets"));
-            Jugador.add(Linea);
+            if (rs.getString("name").equalsIgnoreCase(Nombre)) {
+                Linea = new ArrayList<>();
+                Linea.add(i);
+                Linea.add(rs.getString("name"));
+                Linea.add(rs.getInt("nbaskets"));
+                Jugador.add(Linea);
             }
             i++;
         }
@@ -323,7 +324,69 @@ public class BasquetJDBC {
         st.close();
         return Jugador;
     }
-        
+
+    public List EquiposPorLocalidad(String Nombre) throws SQLException {
+        List<Equipo> equipos = new ArrayList<>();
+        String query = "select * from team where city like '" + Nombre + "';";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while (rs.next()) {
+            Equipo c = new Equipo();
+            c.setName(rs.getString("name"));
+            c.setCity(rs.getString("city"));
+            c.setCreation(rs.getDate("creation").toLocalDate());
+            equipos.add(c);
+        }
+        rs.close();
+        st.close();
+        return equipos;
+    }
+
+    public List<Jugador> JugadorSelectEquipo(String Equipo) throws SQLException {
+        List<Jugador> jugadores = new ArrayList<>();
+        String query = "select * from player where team like '"+Equipo+"';";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while (rs.next()) {
+            Jugador c = new Jugador();
+            Equipo e = new Equipo();
+            c.setName(rs.getString("name"));
+            c.setBirth(rs.getDate("birth").toLocalDate());
+            c.setNbaskets(rs.getInt("nbaskets"));
+            c.setNassists(rs.getInt("nassists"));
+            c.setNrebounds(rs.getInt("nrebounds"));
+            c.setPosition(rs.getString("Position"));
+            e.setName(rs.getString("team"));
+            c.setTeam(e);
+            jugadores.add(c);
+        }
+        rs.close();
+        st.close();
+        return jugadores;
+    }
+    public List<Jugador> JugadorSelectEquipoPosicion(String Equipo, String Posicion) throws SQLException {
+        List<Jugador> jugadores = new ArrayList<>();
+        String query = "select * from player where team like '"+Equipo+"' and Position like '"+Posicion+"';";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while (rs.next()) {
+            Jugador c = new Jugador();
+            Equipo e = new Equipo();
+            c.setName(rs.getString("name"));
+            c.setBirth(rs.getDate("birth").toLocalDate());
+            c.setNbaskets(rs.getInt("nbaskets"));
+            c.setNassists(rs.getInt("nassists"));
+            c.setNrebounds(rs.getInt("nrebounds"));
+            c.setPosition(rs.getString("Position"));
+            e.setName(rs.getString("team"));
+            c.setTeam(e);
+            jugadores.add(c);
+        }
+        rs.close();
+        st.close();
+        return jugadores;
+    }
+
     public void conectar() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/basket";
         String usr = "root";

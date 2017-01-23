@@ -110,22 +110,35 @@ public class Basquet {
         System.out.println(PosicionAvgMinMax.get(i));
         }
         System.out.println("...");        
-        System.out.println("Posiciones mostrando AVG, MAX i MIN.");        
+        System.out.println("RANKING.");        
         List Rankings = gestor.RankingsJugador();
         for(int i =0; i<Rankings.size();i++){
         System.out.println(Rankings.get(i));
         }        
         System.out.println("...");        
-        System.out.println("Posiciones mostrando AVG, MAX i MIN.");        
+        System.out.println("RANKING BUSQUEDA.");        
         List RankingsBusqueda = gestor.RankingsJugadorBusqueda("Dollman");
         for(int i =0; i<RankingsBusqueda.size();i++){
         System.out.println(RankingsBusqueda.get(i));
         }             
         System.out.println("...");        
-        System.out.println("Posiciones mostrando AVG, MAX i MIN.");        
-        List RankingsBusquedaPosicion = gestor.RankingsJugadorBusqueda("Dollman");
-        for(int i =0; i<RankingsBusquedaPosicion.size();i++){
-        System.out.println(RankingsBusquedaPosicion.get(i));
+        System.out.println("Localidad del equipo (Catalunya).");        
+        List<Equipo> LocalidadEquipo = gestor.EquiposPorLocalidad("Catalunya");
+        for (Equipo j : LocalidadEquipo) {
+            System.out.println(j);
+        }
+                    
+        System.out.println("...");        
+        System.out.println("Jugadores del equipo (Barcelona).");        
+        List<Jugador> PlayerEquipo = gestor.JugadorSelectEquipo("Barcelona");
+        for (Jugador j : PlayerEquipo) {
+            System.out.println(j);
+        }
+                System.out.println("...");        
+        System.out.println("Jugadores del equipo (Barcelona).");        
+        List<Jugador> PlayerEquipoPosicion = gestor.JugadorSelectEquipoPosicion("Barcelona","Base");
+        for (Jugador j : PlayerEquipoPosicion) {
+            System.out.println(j);
         }
         
         
