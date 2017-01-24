@@ -48,7 +48,6 @@ public class BasquetJDBC {
 
     public void modificarEquipo(String jugador, String equipo) throws SQLException {
         String insert = "update player set team = ?" + " where name = ?;";
-        System.out.println(conexion);
         PreparedStatement ps = conexion.prepareStatement(insert);
         ps.setString(1, equipo);
         ps.setString(2, jugador);
@@ -93,25 +92,21 @@ public class BasquetJDBC {
         ps.close();
     }
 
-    public void modificarJugador(Jugador j) throws SQLException {
-        String update = "update player set name = ?, birth = ?, nbaskets = ?, nassists = ?, nrebounds = ?, position = ?, team = ? " + " WHERE name = ?";
+    public void modificarJugador(String nombre, int Canastas, int Asistencias, int rebotes) throws SQLException {
+        String update = "update player set nbaskets = ?, nassists = ?, nrebounds = ?" + " WHERE name = ?";
         PreparedStatement ps = conexion.prepareStatement(update);
-        ps.setString(1, j.getName());
-        ps.setDate(2, java.sql.Date.valueOf(j.getBirth()));
-        ps.setInt(3, j.getNbaskets());
-        ps.setInt(4, j.getNassists());
-        ps.setInt(5, j.getNrebounds());
-        ps.setString(6, j.getPosition());
-        ps.setString(7, j.getTeam().getName());
-        ps.setString(8, j.getName());
+        ps.setInt(1, Canastas);
+        ps.setInt(2, Asistencias);
+        ps.setInt(3, rebotes);
+        ps.setString(4, nombre);
         ps.executeUpdate();
         ps.close();
     }
 
-    public void eliminarJugador(Jugador j) throws SQLException {
+    public void eliminarJugador(String nombre) throws SQLException {
         String update = "delete from player where name= ?";
         PreparedStatement ps = conexion.prepareStatement(update);
-        ps.setString(1, j.getName());
+        ps.setString(1,nombre);
         ps.executeUpdate();
         ps.close();
     }
@@ -364,9 +359,33 @@ public class BasquetJDBC {
         st.close();
         return jugadores;
     }
+    
     public List<Jugador> JugadorSelectEquipoPosicion(String Equipo, String Posicion) throws SQLException {
         List<Jugador> jugadores = new ArrayList<>();
         String query = "select * from player where team like '"+Equipo+"' and Position like '"+Posicion+"';";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while (rs.next()) {
+            Jugador c = new Jugador();
+            Equipo e = new Equipo();
+            c.setName(rs.getString("name"));
+            c.setBirth(rs.getDate("birth").toLocalDate());
+            c.setNbaskets(rs.getInt("nbaskets"));
+            c.setNassists(rs.getInt("nassists"));
+            c.setNrebounds(rs.getInt("nrebounds"));
+            c.setPosition(rs.getString("Position"));
+            e.setName(rs.getString("team"));
+            c.setTeam(e);
+            jugadores.add(c);
+        }
+        rs.close();
+        st.close();
+        return jugadores;
+    }
+    
+    public List<Jugador> JugadorMasCanastasEquipo(String Equipo) throws SQLException {
+        List<Jugador> jugadores = new ArrayList<>();
+        String query = "select * from player where team like '"+Equipo+"' order by nbaskets DESC limit 1;";
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(query);
         while (rs.next()) {
