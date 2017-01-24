@@ -18,12 +18,13 @@ public class Basquet {
         BasquetJDBC gestor = new BasquetJDBC();
         System.out.println("Estableciendo conexión con la bbdd...");
         gestor.conectar();
-        /*
+        
         Equipo Equipo1 = new Equipo("Barcelona", "Catalunya", LocalDate.of(1899, 06, 14));
         Equipo Equipo2 = new Equipo("Real de Madriz", "Espanya", LocalDate.of(1902, 8, 21));
+        /*
         gestor.insertEquipo(Equipo1);
-        gestor.insertEquipo(Equipo2);   
-         */
+        gestor.insertEquipo(Equipo2);  
+        */
         System.out.println("...");
         System.out.println("Equipos dados de alta");
 
@@ -32,7 +33,7 @@ public class Basquet {
         for (Equipo e : todosEquipos) {
             System.out.println(e);
         }
-        /*
+        
         Jugador jugador1 = new Jugador("Navarro", LocalDate.of(1987, 07, 25), 450, 65, 21, "Escolta", Equipo1);
         Jugador jugador2 = new Jugador("Dollman", LocalDate.of(1986, 12, 27), 650, 420, 201, "Ala-Pivot", Equipo1);
         Jugador jugador3 = new Jugador("Koponen", LocalDate.of(1992, 10, 15), 250, 122, 211, "alero", Equipo1);
@@ -44,6 +45,7 @@ public class Basquet {
         Jugador jugador8 = new Jugador("randolph", LocalDate.of(1992, 9, 15), 250, 122, 211, "alero", Equipo2);
         Jugador jugador9 = new Jugador("llull", LocalDate.of(1987, 07, 10), 235, 665, 221, "Base", Equipo2);
         Jugador jugador10 = new Jugador("ayón", LocalDate.of(1987, 11, 1), 750, 225, 421, "Pivot", Equipo2);
+        /*
         gestor.insertJugador(jugador1);gestor.insertJugador(jugador2);gestor.insertJugador(jugador3);gestor.insertJugador(jugador4);gestor.insertJugador(jugador5);gestor.insertJugador(jugador6);gestor.insertJugador(jugador7);gestor.insertJugador(jugador8);gestor.insertJugador(jugador9);gestor.insertJugador(jugador10);
          */
         System.out.println("...");
@@ -55,19 +57,15 @@ public class Basquet {
         }
         System.out.println("...");
         System.out.println("Modificar Equipo de un jugador (Llull).");
-        gestor.modificarEquipo("llull", "Barcelona");
+        gestor.modificarEquipo(jugador4, "Barcelona");
         System.out.println("Modificado correctamente");
         System.out.println("...");
         System.out.println("Modificar Canastas,Rebotes y asistencias de un jugador (hunter).");
-        gestor.modificarJugador("hunter", 2122, 345, 123);
-        System.out.println("Modificado correctamente");
-        System.out.println("...");
-        System.out.println("Modificar Equipo de un jugador (Llull).");
-        gestor.modificarEquipo("Ayón", "Barcelona");
+        gestor.modificarJugador(jugador7, 2122, 345, 123);
         System.out.println("Modificado correctamente");
         System.out.println("...");
         System.out.println("eliminando un jugador (hunter).");
-        gestor.eliminarJugador("hunter");
+        gestor.eliminarJugador(jugador7);
         System.out.println("eliminado correctamente");
         System.out.println("...");
         System.out.println("Buscando objecto del jugador (llull).");
@@ -140,10 +138,8 @@ public class Basquet {
         }
         System.out.println("...");
         System.out.println("Máximo anotador del equipo (Barcelona).");
-        List<Jugador> JugadorMasCanastasEquipo = gestor.JugadorMasCanastasEquipo("Barcelona");
-        for (Jugador j : JugadorMasCanastasEquipo) {
-            System.out.println(j);
-        }
+        Jugador JugadorMasCanastasEquipo = gestor.JugadorMasCanastasEquipo("Barcelona");
+        System.out.println(JugadorMasCanastasEquipo);
 
     }
 

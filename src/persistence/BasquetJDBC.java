@@ -46,11 +46,11 @@ public class BasquetJDBC {
         ps.close();
     }
 
-    public void modificarEquipo(String jugador, String equipo) throws SQLException {
+    public void modificarEquipo(Jugador jugador, String equipo) throws SQLException {
         String insert = "update player set team = ?" + " where name = ?;";
         PreparedStatement ps = conexion.prepareStatement(insert);
         ps.setString(1, equipo);
-        ps.setString(2, jugador);
+        ps.setString(2, jugador.getName());
         ps.executeUpdate();
         ps.close();
     }
@@ -92,21 +92,21 @@ public class BasquetJDBC {
         ps.close();
     }
 
-    public void modificarJugador(String nombre, int Canastas, int Asistencias, int rebotes) throws SQLException {
+    public void modificarJugador(Jugador jugador, int Canastas, int Asistencias, int rebotes) throws SQLException {
         String update = "update player set nbaskets = ?, nassists = ?, nrebounds = ?" + " WHERE name = ?";
         PreparedStatement ps = conexion.prepareStatement(update);
         ps.setInt(1, Canastas);
         ps.setInt(2, Asistencias);
         ps.setInt(3, rebotes);
-        ps.setString(4, nombre);
+        ps.setString(4, jugador.getName());
         ps.executeUpdate();
         ps.close();
     }
 
-    public void eliminarJugador(String nombre) throws SQLException {
+    public void eliminarJugador(Jugador jugador) throws SQLException {
         String update = "delete from player where name= ?";
         PreparedStatement ps = conexion.prepareStatement(update);
-        ps.setString(1,nombre);
+        ps.setString(1,jugador.getName());
         ps.executeUpdate();
         ps.close();
     }
@@ -383,23 +383,21 @@ public class BasquetJDBC {
         return jugadores;
     }
     
-    public List<Jugador> JugadorMasCanastasEquipo(String Equipo) throws SQLException {
-        List<Jugador> jugadores = new ArrayList<>();
+    public Jugador JugadorMasCanastasEquipo(String Equipo) throws SQLException {
+        Jugador jugadores = new Jugador();
         String query = "select * from player where team like '"+Equipo+"' order by nbaskets DESC limit 1;";
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(query);
         while (rs.next()) {
-            Jugador c = new Jugador();
             Equipo e = new Equipo();
-            c.setName(rs.getString("name"));
-            c.setBirth(rs.getDate("birth").toLocalDate());
-            c.setNbaskets(rs.getInt("nbaskets"));
-            c.setNassists(rs.getInt("nassists"));
-            c.setNrebounds(rs.getInt("nrebounds"));
-            c.setPosition(rs.getString("Position"));
-            e.setName(rs.getString("team"));
-            c.setTeam(e);
-            jugadores.add(c);
+            jugadores.setName(rs.getString("name"));
+            jugadores.setBirth(rs.getDate("birth").toLocalDate());
+            jugadores.setNbaskets(rs.getInt("nbaskets"));
+            jugadores.setNassists(rs.getInt("nassists"));
+            jugadores.setNrebounds(rs.getInt("nrebounds"));
+            jugadores.setPosition(rs.getString("Position"));
+            jugadores.setName(rs.getString("team"));
+            jugadores.setTeam(e);
         }
         rs.close();
         st.close();
@@ -417,5 +415,9 @@ public class BasquetJDBC {
         if (conexion != null) {
             conexion.close();
         }
+    }
+
+    private Jugador Jugador() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
